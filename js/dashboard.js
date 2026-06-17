@@ -1,3 +1,4 @@
+alert("dashboard.js loaded");
 let currentUserEmail = "";
 
 /* ==========================
