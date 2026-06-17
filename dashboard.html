@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script src="js/firebase-config.js"></script>
+
+</head>
+
+<body class="bg-zinc-950 text-white">
+
+<div class="max-w-5xl mx-auto py-10 px-5">
+
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">
+        Applicant Dashboard
+    </h1>
+
+```
+<button onclick="logout()"
+    class="bg-red-600 px-4 py-2 rounded-lg">
+    Logout
+</button>
+```
+
+</div>
+
+<form id="profileForm" class="space-y-8">
+
+<div>
+<h2 class="text-xl font-bold mb-4">Personal Details</h2>
+
+<input id="name" placeholder="Full Name"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="phone" placeholder="Contact Number"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="email" readonly
+class="w-full p-3 bg-zinc-800 rounded">
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">About</h2>
+
+<textarea id="bio"
+class="w-full p-3 bg-zinc-900 rounded h-32"
+placeholder="Write about yourself"></textarea>
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">School</h2>
+
+<input id="school"
+placeholder="School Name"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="passingYear"
+placeholder="12th Passing Year"
+class="w-full p-3 bg-zinc-900 rounded">
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">College</h2>
+
+<input id="college"
+placeholder="College Name"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="degree"
+placeholder="Degree"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="branch"
+placeholder="Branch"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="collegeStart"
+placeholder="College Start Year"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="collegeEnd"
+placeholder="College End Year"
+class="w-full p-3 bg-zinc-900 rounded">
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">Links</h2>
+
+<input id="linkedin"
+placeholder="LinkedIn URL"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<input id="github"
+placeholder="GitHub URL"
+class="w-full p-3 bg-zinc-900 rounded">
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">Skills</h2>
+
+<textarea id="skills"
+class="w-full p-3 bg-zinc-900 rounded h-32"></textarea>
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">Project 1</h2>
+
+<input id="project1Name"
+placeholder="Project Name"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<textarea id="project1Details"
+class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">Project 2</h2>
+
+<input id="project2Name"
+placeholder="Project Name"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<textarea id="project2Details"
+class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
+
+</div>
+
+<div>
+<h2 class="text-xl font-bold mb-4">Project 3</h2>
+
+<input id="project3Name"
+placeholder="Project Name"
+class="w-full p-3 bg-zinc-900 rounded mb-3">
+
+<textarea id="project3Details"
+class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
+
+</div>
+
+<button
+type="button"
+onclick="saveProfile()"
+class="bg-green-600 px-8 py-3 rounded-xl">
+Save Profile </button>
+
+</form>
+
+</div>
+
+<script>
+
+let currentUserEmail="";
+
+auth.onAuthStateChanged(async(user)=>{
+
+    if(!user){
+        window.location.href="index.html";
+        return;
+    }
+
+    currentUserEmail=user.email;
+
+    document.getElementById("email").value=user.email;
+
+    loadProfile(user.email);
+
+});
+
+function logout(){
+
+    auth.signOut()
+    .then(()=>{
+        window.location.href="index.html";
+    });
+
+}
+
+async function loadProfile(email){
+
+    const doc=await db.collection("users")
+    .doc(email)
+    .get();
+
+    if(!doc.exists) return;
+
+    const data=doc.data();
+
+    Object.keys(data).forEach(key=>{
+
+        const el=document.getElementById(key);
+
+        if(el){
+            el.value=data[key];
+        }
+
+    });
+
+}
+
+async function saveProfile(){
+
+    const profile={
+
+        name:name.value,
+        phone:phone.value,
+        email:email.value,
+
+        bio:bio.value,
+
+        school:school.value,
+        passingYear:passingYear.value,
+
+        college:college.value,
+        degree:degree.value,
+        branch:branch.value,
+
+        collegeStart:collegeStart.value,
+        collegeEnd:collegeEnd.value,
+
+        linkedin:linkedin.value,
+        github:github.value,
+
+        skills:skills.value,
+
+        project1Name:project1Name.value,
+        project1Details:project1Details.value,
+
+        project2Name:project2Name.value,
+        project2Details:project2Details.value,
+
+        project3Name:project3Name.value,
+        project3Details:project3Details.value,
+
+        updatedAt:new Date().toISOString()
+    };
+
+    await db.collection("users")
+    .doc(currentUserEmail)
+    .set(profile,{merge:true});
+
+    alert("Profile Saved Successfully");
+}
+
+</script>
+
+</body>
+</html>
