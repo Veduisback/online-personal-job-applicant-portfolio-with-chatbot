@@ -205,7 +205,7 @@ input.value="";
 
 const response =
 await fetch(
-"https://online-job-applicant-portfolio.onrender.com",
+"https://online-job-applicant-portfolio.onrender.com/chat",
 {
 
 
