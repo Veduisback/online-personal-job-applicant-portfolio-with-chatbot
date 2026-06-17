@@ -31,10 +31,9 @@ try{
 
 
 const snapshot =
-await db.collection("users")
+await window.db.collection("users")
 .where("slug","==",slug)
 .get();
-
 
 
 if(snapshot.empty){
