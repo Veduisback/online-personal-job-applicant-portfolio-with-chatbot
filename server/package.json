@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "start":"node server.js"
+  },
+
+  "dependencies": {
+
+    "axios":"latest",
+    "cors":"latest",
+    "dotenv":"latest",
+    "express":"latest",
+    "firebase-admin":"latest"
+
+  }
+}
