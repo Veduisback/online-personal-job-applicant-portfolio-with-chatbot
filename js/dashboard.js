@@ -1,13 +1,13 @@
 alert("dashboard.js loaded");
 let currentUserEmail = "";
-
+```
 /* ==========================
 AUTH CHECK
 ========================== */
-
+```
 auth.onAuthStateChanged(async (user) => {
 
-```
+
 if (!user) {
     window.location.href = "index.html";
     return;
@@ -22,17 +22,17 @@ if (emailField) {
 }
 
 await loadProfile(user.email);
-```
+
 
 });
-
+```
 /* ==========================
 LOGOUT
 ========================== */
-
+```
 function logout() {
 
-```
+
 auth.signOut()
     .then(() => {
         window.location.href = "index.html";
@@ -48,10 +48,10 @@ auth.signOut()
 /* ==========================
 LOAD PROFILE
 ========================== */
-
+```
 async function loadProfile(email) {
 
-```
+
 try {
 
     const doc = await db
@@ -233,6 +233,6 @@ catch (error) {
     alert(error.message);
 
 }
-```
+
 
 }
