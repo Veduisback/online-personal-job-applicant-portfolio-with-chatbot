@@ -21,9 +21,7 @@ const app = express();
 
 app.use(cors({
 
-    origin: [
-        "https://veduisback.github.io"
-    ],
+    origin: "https://veduisback.github.io",
 
     methods: [
         "GET",
@@ -48,6 +46,13 @@ app.use(express.json());
 ========================== */
 
 
+if(!process.env.FIREBASE_SERVICE_ACCOUNT){
+
+    console.log("Firebase service account missing");
+
+}
+
+
 const serviceAccount = JSON.parse(
     process.env.FIREBASE_SERVICE_ACCOUNT
 );
@@ -61,20 +66,19 @@ admin.initializeApp({
 });
 
 
+
 const db = getFirestore();
 
 
 
 
 
-
-
 /* ==========================
-   CHAT API
+   CHAT ROUTE
 ========================== */
 
 
-app.post("/chat", async (req,res)=>{
+app.post("/chat", async(req,res)=>{
 
 
 try{
@@ -86,25 +90,25 @@ message,
 
 slug
 
-} = req.body;
+}=req.body;
+
+
+
+console.log(
+"USER MESSAGE:",
+message
+);
+
+
+console.log(
+"SLUG:",
+slug
+);
 
 
 
 
-if(!message || !slug){
-
-return res.json({
-
-reply:"Missing message or slug"
-
-});
-
-}
-
-
-
-
-/* FIND USER */
+/* FIRESTORE */
 
 
 const snapshot = await db
@@ -128,15 +132,14 @@ reply:"Candidate not found"
 
 
 
-let profile = {};
+
+let profile;
 
 
 
 snapshot.forEach(doc=>{
 
-
 profile = doc.data();
-
 
 });
 
@@ -145,19 +148,15 @@ profile = doc.data();
 
 
 
-
-/* AI CONTEXT */
-
-
 const context = `
 
 
-You are an AI assistant for a candidate portfolio.
+You are an AI chatbot for this portfolio.
 
-Answer questions only using the candidate information below.
+Answer questions only using this candidate data.
 
 
-Candidate Name:
+Name:
 
 ${profile.name}
 
@@ -177,13 +176,10 @@ ${profile.skills}
 
 Education:
 
-College:
 ${profile.college}
 
-Degree:
 ${profile.degree}
 
-Branch:
 ${profile.branch}
 
 
@@ -191,11 +187,9 @@ ${profile.branch}
 Projects:
 
 
-
 ${profile.project1Name}
 
 ${profile.project1Details}
-
 
 
 ${profile.project2Name}
@@ -203,11 +197,9 @@ ${profile.project2Name}
 ${profile.project2Details}
 
 
-
 ${profile.project3Name}
 
 ${profile.project3Details}
-
 
 
 `;
@@ -218,14 +210,34 @@ ${profile.project3Details}
 
 
 
+/* ==========================
+   OPENROUTER DEBUG
+========================== */
 
-/* OPENROUTER */
+
+console.log(
+"OpenRouter Key:",
+process.env.OPENROUTER_API_KEY
+?
+process.env.OPENROUTER_API_KEY.substring(0,20)
+:
+"NOT FOUND"
+);
 
 
-const aiResponse = await axios.post(
+
+
+
+/* ==========================
+   OPENROUTER REQUEST
+========================== */
+
+
+const response = await axios.post(
 
 
 "https://openrouter.ai/api/v1/chat/completions",
+
 
 
 {
@@ -261,7 +273,9 @@ content:message
 ]
 
 
+
 },
+
 
 
 {
@@ -270,7 +284,7 @@ content:message
 headers:{
 
 
-Authorization:
+"Authorization":
 
 `Bearer ${process.env.OPENROUTER_API_KEY}`,
 
@@ -278,7 +292,18 @@ Authorization:
 
 "Content-Type":
 
-"application/json"
+"application/json",
+
+
+"HTTP-Referer":
+
+"https://veduisback.github.io",
+
+
+"X-Title":
+
+"AI Portfolio Chatbot"
+
 
 
 }
@@ -298,22 +323,26 @@ Authorization:
 
 const reply =
 
-aiResponse.data
+response.data
 .choices[0]
 .message
 .content;
 
 
 
+console.log(
+"AI RESPONSE:",
+reply
+);
+
+
 
 
 res.json({
 
-reply:reply
+reply
 
 });
-
-
 
 
 
@@ -323,16 +352,18 @@ catch(error){
 
 
 console.log(
-"CHAT ERROR:",
-error.response?.data || error.message
+"FULL ERROR:",
+error.response?.data || error
 );
 
 
 
-res.status(500)
-.json({
+res.status(500).json({
 
-reply:"AI server error"
+reply:
+error.response?.data?.error?.message
+||
+"AI server error"
 
 });
 
@@ -349,13 +380,13 @@ reply:"AI server error"
 
 
 
-
 /* ==========================
-   START SERVER
+   SERVER START
 ========================== */
 
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+process.env.PORT || 3000;
 
 
 
