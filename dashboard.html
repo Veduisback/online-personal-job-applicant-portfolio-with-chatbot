@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -7,252 +6,227 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Applicant Dashboard</title>
 
-```
-<!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-<!-- Firebase Config -->
-<script src="firebase-config.js"></script>
-```
-
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
 </head>
 
 <body class="bg-zinc-950 text-white">
 
-<div class="max-w-5xl mx-auto py-10 px-5">
+    <div class="max-w-5xl mx-auto py-10 px-5">
 
-```
-<!-- Header -->
-<div class="flex justify-between items-center mb-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
 
-    <h1 class="text-3xl font-bold">
-        Applicant Dashboard
-    </h1>
+            <h1 class="text-3xl font-bold">
+                Applicant Dashboard
+            </h1>
 
-    <button
-        onclick="logout()"
-        class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">
-        Logout
-    </button>
+            <button
+                onclick="logout()"
+                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">
+                Logout
+            </button>
 
-</div>
+        </div>
 
-<!-- Form -->
-<form id="profileForm" class="space-y-8">
+        <form id="profileForm" class="space-y-8">
 
-    <!-- Personal Details -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            Personal Details
-        </h2>
+            <!-- Personal -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">Personal Details</h2>
 
-        <input
-            id="name"
-            type="text"
-            placeholder="Full Name"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="name"
+                    type="text"
+                    placeholder="Full Name"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="phone"
-            type="text"
-            placeholder="Contact Number"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="phone"
+                    type="text"
+                    placeholder="Contact Number"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="email"
-            type="email"
-            readonly
-            class="w-full p-3 bg-zinc-800 rounded">
-    </div>
+                <input
+                    id="email"
+                    type="email"
+                    readonly
+                    class="w-full p-3 bg-zinc-800 rounded">
+            </div>
 
-    <!-- About -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            About
-        </h2>
+            <!-- About -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">About</h2>
 
-        <textarea
-            id="bio"
-            placeholder="Tell us about yourself"
-            class="w-full p-3 bg-zinc-900 rounded h-32"></textarea>
-    </div>
+                <textarea
+                    id="bio"
+                    placeholder="Tell us about yourself"
+                    class="w-full p-3 bg-zinc-900 rounded h-32"></textarea>
+            </div>
 
-    <!-- School -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            School
-        </h2>
+            <!-- School -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">School</h2>
 
-        <input
-            id="school"
-            type="text"
-            placeholder="School Name"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="school"
+                    type="text"
+                    placeholder="School Name"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="passingYear"
-            type="text"
-            placeholder="12th Passing Year"
-            class="w-full p-3 bg-zinc-900 rounded">
-    </div>
+                <input
+                    id="passingYear"
+                    type="text"
+                    placeholder="12th Passing Year"
+                    class="w-full p-3 bg-zinc-900 rounded">
+            </div>
 
-    <!-- College -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            College
-        </h2>
+            <!-- College -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">College</h2>
 
-        <input
-            id="college"
-            type="text"
-            placeholder="College Name"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="college"
+                    type="text"
+                    placeholder="College Name"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="degree"
-            type="text"
-            placeholder="Degree"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="degree"
+                    type="text"
+                    placeholder="Degree"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="branch"
-            type="text"
-            placeholder="Branch"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="branch"
+                    type="text"
+                    placeholder="Branch"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="collegeStart"
-            type="text"
-            placeholder="College Start Year"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="collegeStart"
+                    type="text"
+                    placeholder="College Start Year"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="collegeEnd"
-            type="text"
-            placeholder="College End Year"
-            class="w-full p-3 bg-zinc-900 rounded">
-    </div>
+                <input
+                    id="collegeEnd"
+                    type="text"
+                    placeholder="College End Year"
+                    class="w-full p-3 bg-zinc-900 rounded">
+            </div>
 
-    <!-- Links -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            Links
-        </h2>
+            <!-- Links -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">Links</h2>
 
-        <input
-            id="linkedin"
-            type="text"
-            placeholder="LinkedIn URL"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="linkedin"
+                    type="text"
+                    placeholder="LinkedIn URL"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <input
-            id="github"
-            type="text"
-            placeholder="GitHub URL"
-            class="w-full p-3 bg-zinc-900 rounded">
-    </div>
+                <input
+                    id="github"
+                    type="text"
+                    placeholder="GitHub URL"
+                    class="w-full p-3 bg-zinc-900 rounded">
+            </div>
 
-    <!-- Skills -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            Skills
-        </h2>
+            <!-- Skills -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">Skills</h2>
 
-        <textarea
-            id="skills"
-            placeholder="Python, Java, Firebase, OpenCV..."
-            class="w-full p-3 bg-zinc-900 rounded h-32"></textarea>
-    </div>
+                <textarea
+                    id="skills"
+                    placeholder="Python, Java, Firebase, OpenCV..."
+                    class="w-full p-3 bg-zinc-900 rounded h-32"></textarea>
+            </div>
 
-    <!-- Project 1 -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            Project 1
-        </h2>
+            <!-- Project 1 -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">Project 1</h2>
 
-        <input
-            id="project1Name"
-            type="text"
-            placeholder="Project Name"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="project1Name"
+                    type="text"
+                    placeholder="Project Name"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <textarea
-            id="project1Details"
-            placeholder="Project Details"
-            class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
-    </div>
+                <textarea
+                    id="project1Details"
+                    placeholder="Project Details"
+                    class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
+            </div>
 
-    <!-- Project 2 -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            Project 2
-        </h2>
+            <!-- Project 2 -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">Project 2</h2>
 
-        <input
-            id="project2Name"
-            type="text"
-            placeholder="Project Name"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="project2Name"
+                    type="text"
+                    placeholder="Project Name"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <textarea
-            id="project2Details"
-            placeholder="Project Details"
-            class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
-    </div>
+                <textarea
+                    id="project2Details"
+                    placeholder="Project Details"
+                    class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
+            </div>
 
-    <!-- Project 3 -->
-    <div>
-        <h2 class="text-xl font-bold mb-4">
-            Project 3
-        </h2>
+            <!-- Project 3 -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">Project 3</h2>
 
-        <input
-            id="project3Name"
-            type="text"
-            placeholder="Project Name"
-            class="w-full p-3 bg-zinc-900 rounded mb-3">
+                <input
+                    id="project3Name"
+                    type="text"
+                    placeholder="Project Name"
+                    class="w-full p-3 bg-zinc-900 rounded mb-3">
 
-        <textarea
-            id="project3Details"
-            placeholder="Project Details"
-            class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
-    </div>
+                <textarea
+                    id="project3Details"
+                    placeholder="Project Details"
+                    class="w-full p-3 bg-zinc-900 rounded h-24"></textarea>
+            </div>
 
-    <!-- Buttons -->
-    <div class="flex flex-wrap gap-4">
+            <!-- Buttons -->
+            <div class="flex gap-4 flex-wrap">
 
-        <button
-            type="button"
-            onclick="saveProfile()"
-            class="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-xl">
-            Save Profile
-        </button>
+                <button
+                    type="button"
+                    onclick="saveProfile()"
+                    class="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-xl">
+                    Save Profile
+                </button>
 
-        <button
-            type="button"
-            onclick="generatePortfolio()"
-            class="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-xl">
-            Generate AI Portfolio
-        </button>
+                <button
+                    type="button"
+                    onclick="generatePortfolio()"
+                    class="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-xl">
+                    Generate AI Portfolio
+                </button>
+
+            </div>
+
+            <!-- Generated Portfolio Link -->
+            <div id="portfolioLink"></div>
+
+        </form>
 
     </div>
 
-    <!-- Generated Portfolio Link -->
-    <div id="portfolioLink"></div>
-
-</form>
-```
-
-</div>
-
-<!-- Dashboard Logic -->
-
-<script src="js/dashboard.js"></script>
+    <!-- Dashboard JS -->
+    <script src="js/dashboard.js"></script>
 
 </body>
 </html>
