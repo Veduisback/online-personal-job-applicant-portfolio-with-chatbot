@@ -5,46 +5,58 @@ require("dotenv").config();
 
 
 const admin = require("firebase-admin/app");
+const { cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 
 
-const cors = require("cors");
+
+const app = express();
+
+
+
+/* ==========================
+   CORS
+========================== */
 
 
 app.use(cors({
 
-    origin:[
+    origin: [
         "https://veduisback.github.io"
     ],
 
-    methods:[
+    methods: [
         "GET",
         "POST"
     ],
 
-    allowedHeaders:[
+    allowedHeaders: [
         "Content-Type"
     ]
 
 }));
 
+
 app.use(express.json());
 
 
 
-// FIREBASE ADMIN
+
+
+/* ==========================
+   FIREBASE ADMIN
+========================== */
+
 
 const serviceAccount = JSON.parse(
-process.env.FIREBASE_SERVICE_ACCOUNT
+    process.env.FIREBASE_SERVICE_ACCOUNT
 );
 
-
-const { cert } = require("firebase-admin/app");
 
 
 admin.initializeApp({
 
-credential: cert(serviceAccount)
+    credential: cert(serviceAccount)
 
 });
 
@@ -53,10 +65,16 @@ const db = getFirestore();
 
 
 
-// CHAT API
 
 
-app.post("/chat", async(req,res)=>{
+
+
+/* ==========================
+   CHAT API
+========================== */
+
+
+app.post("/chat", async (req,res)=>{
 
 
 try{
@@ -68,33 +86,16 @@ message,
 
 slug
 
-}=req.body;
+} = req.body;
 
 
 
 
-// FIND USER
-
-
-const snapshot =
-
-await db.collection("users")
-
-.where(
-"slug",
-"==",
-slug
-)
-
-.get();
-
-
-
-if(snapshot.empty){
+if(!message || !slug){
 
 return res.json({
 
-reply:"Candidate not found"
+reply:"Missing message or slug"
 
 });
 
@@ -103,13 +104,39 @@ reply:"Candidate not found"
 
 
 
-let profile;
+/* FIND USER */
+
+
+const snapshot = await db
+.collection("users")
+.where("slug","==",slug)
+.get();
+
+
+
+if(snapshot.empty){
+
+
+return res.json({
+
+reply:"Candidate not found"
+
+});
+
+
+}
+
+
+
+let profile = {};
 
 
 
 snapshot.forEach(doc=>{
 
+
 profile = doc.data();
+
 
 });
 
@@ -118,46 +145,63 @@ profile = doc.data();
 
 
 
-// CREATE CONTEXT
+
+/* AI CONTEXT */
 
 
 const context = `
 
+
 You are an AI assistant for a candidate portfolio.
 
-Answer questions only using this candidate information.
+Answer questions only using the candidate information below.
 
-Candidate:
 
-Name:
+Candidate Name:
+
 ${profile.name}
 
 
+
 Bio:
+
 ${profile.bio}
 
 
+
 Skills:
+
 ${profile.skills}
 
 
+
 Education:
+
+College:
 ${profile.college}
+
+Degree:
 ${profile.degree}
+
+Branch:
 ${profile.branch}
 
 
 
 Projects:
 
+
+
 ${profile.project1Name}
 
 ${profile.project1Details}
 
 
+
 ${profile.project2Name}
 
 ${profile.project2Details}
+
 
 
 ${profile.project3Name}
@@ -173,14 +217,16 @@ ${profile.project3Details}
 
 
 
-// OPENROUTER
 
 
-const aiResponse =
+/* OPENROUTER */
 
-await axios.post(
+
+const aiResponse = await axios.post(
+
 
 "https://openrouter.ai/api/v1/chat/completions",
+
 
 {
 
@@ -229,6 +275,7 @@ Authorization:
 `Bearer ${process.env.OPENROUTER_API_KEY}`,
 
 
+
 "Content-Type":
 
 "application/json"
@@ -240,7 +287,10 @@ Authorization:
 }
 
 
+
 );
+
+
 
 
 
@@ -255,9 +305,11 @@ aiResponse.data
 
 
 
+
+
 res.json({
 
-reply
+reply:reply
 
 });
 
@@ -270,14 +322,17 @@ reply
 catch(error){
 
 
-console.log(error.response?.data || error);
+console.log(
+"CHAT ERROR:",
+error.response?.data || error.message
+);
+
 
 
 res.status(500)
 .json({
 
-reply:
-"AI server error"
+reply:"AI server error"
 
 });
 
@@ -292,11 +347,23 @@ reply:
 
 
 
-app.listen(3000,()=>{
+
+
+
+/* ==========================
+   START SERVER
+========================== */
+
+
+const PORT = process.env.PORT || 3000;
+
+
+
+app.listen(PORT,()=>{
 
 
 console.log(
-"Server running on port 3000"
+`Server running on port ${PORT}`
 );
 
 
