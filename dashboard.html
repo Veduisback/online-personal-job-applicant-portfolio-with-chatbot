@@ -220,41 +220,47 @@ async function loadProfile(email){
 
 async function saveProfile(){
 
-    const profile={
+    const profile = {
 
-        name:name.value,
-        phone:phone.value,
-        email:email.value,
+    name: document.getElementById("name").value,
 
-        bio:bio.value,
+    phone: document.getElementById("phone").value,
 
-        school:school.value,
-        passingYear:passingYear.value,
+    email: document.getElementById("email").value,
 
-        college:college.value,
-        degree:degree.value,
-        branch:branch.value,
+    bio: document.getElementById("bio").value,
 
-        collegeStart:collegeStart.value,
-        collegeEnd:collegeEnd.value,
+    school: document.getElementById("school").value,
 
-        linkedin:linkedin.value,
-        github:github.value,
+    passingYear: document.getElementById("passingYear").value,
 
-        skills:skills.value,
+    college: document.getElementById("college").value,
 
-        project1Name:project1Name.value,
-        project1Details:project1Details.value,
+    degree: document.getElementById("degree").value,
 
-        project2Name:project2Name.value,
-        project2Details:project2Details.value,
+    branch: document.getElementById("branch").value,
 
-        project3Name:project3Name.value,
-        project3Details:project3Details.value,
+    collegeStart: document.getElementById("collegeStart").value,
 
-        updatedAt:new Date().toISOString()
-    };
+    collegeEnd: document.getElementById("collegeEnd").value,
 
+    linkedin: document.getElementById("linkedin").value,
+
+    github: document.getElementById("github").value,
+
+    skills: document.getElementById("skills").value,
+
+    project1Name: document.getElementById("project1Name").value,
+    project1Details: document.getElementById("project1Details").value,
+
+    project2Name: document.getElementById("project2Name").value,
+    project2Details: document.getElementById("project2Details").value,
+
+    project3Name: document.getElementById("project3Name").value,
+    project3Details: document.getElementById("project3Details").value,
+
+    updatedAt: new Date().toISOString()
+};
     await db.collection("users")
     .doc(currentUserEmail)
     .set(profile,{merge:true});
