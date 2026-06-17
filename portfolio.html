@@ -1,19 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html>
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>AI Portfolio</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
 
 </head>
 
@@ -21,110 +13,95 @@
 <body class="bg-black text-white">
 
 
-<header class="p-5 border-b border-purple-900">
+<div class="min-h-screen grid md:grid-cols-3">
 
-<h1 
-id="name"
-class="text-3xl text-purple-400 font-bold">
 
+<!-- PROFILE SECTION -->
+
+<div class="md:col-span-2 p-10">
+
+
+<h1 id="name"
+class="text-5xl font-bold mb-5">
 Loading...
-
 </h1>
-
-</header>
-
-
-
-<section class="grid md:grid-cols-3 gap-5 p-8">
-
-
-<!-- PROFILE -->
-
-<div class="md:col-span-1">
-
-
-<div class="bg-zinc-900 p-5 rounded-xl">
-
-
-<h2 class="text-xl text-purple-400">
-About
-</h2>
 
 
 <p id="bio"
-class="mt-3 text-zinc-300">
-
+class="text-gray-300 text-lg mb-8">
 </p>
 
 
 
-<h2 class="text-xl text-purple-400 mt-5">
+<h2 class="text-2xl font-bold">
 Skills
 </h2>
 
 
 <p id="skills"
-class="text-zinc-300">
-
+class="mt-3 text-gray-400">
 </p>
 
 
 
-<h2 class="text-xl text-purple-400 mt-5">
+<h2 class="text-2xl font-bold mt-10">
 Education
 </h2>
 
 
-<p id="education">
-
+<p id="education"
+class="text-gray-400 mt-3">
 </p>
 
 
+
+<h2 class="text-2xl font-bold mt-10">
+Projects
+</h2>
+
+
+
+<div id="projects"
+class="mt-5 space-y-5">
 </div>
 
-
-</div>
-
-
-
-
-
-<!-- CHAT -->
-
-<div class="md:col-span-2">
-
-
-<div class="bg-zinc-900 rounded-xl h-[600px] flex flex-col">
-
-
-<div 
-id="chatBox"
-class="flex-1 overflow-y-auto p-5">
-
-
-<p class="text-zinc-400">
-Ask anything about this applicant
-</p>
 
 
 </div>
 
 
 
-<div class="flex p-3 gap-2">
+
+<!-- CHATBOT -->
+
+<div class="border-l border-zinc-800 p-5 flex flex-col">
+
+
+<h2 class="text-xl font-bold mb-5">
+Ask AI about this candidate
+</h2>
+
+
+<div id="chatBox"
+class="flex-1 overflow-y-auto space-y-3">
+
+</div>
+
+
+
+<div class="flex mt-5">
 
 
 <input
-id="userInput"
-class="flex-1 bg-black border border-purple-700 rounded-lg p-3"
-placeholder="Ask about skills, projects..."
+id="message"
+class="flex-1 bg-zinc-900 p-3 rounded"
+placeholder="Ask something..."
 >
-
 
 
 <button
 onclick="sendMessage()"
-class="bg-purple-600 px-5 rounded-lg">
+class="bg-white text-black px-5 rounded ml-2">
 
 Send
 
@@ -141,185 +118,15 @@ Send
 </div>
 
 
-</section>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 
+<script src="firebase.js"></script>
 
-<script>
-
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyBE8lUmRhcVpC-jgG21s_rfmM2gEUx4z0s",
-
-authDomain:"portfolio-chatbot-84fd5.firebaseapp.com",
-
-projectId:"portfolio-chatbot-84fd5",
-
-appId:"1:1081409423757:web:b215f7395cbe6c18f415c4"
-
-};
-
-
-firebase.initializeApp(firebaseConfig);
-
-
-const db=firebase.firestore();
-
-
-
-let slug =
-new URLSearchParams(window.location.search)
-.get("slug");
-
-
-
-let userData={};
-
-
-
-async function loadPortfolio(){
-
-
-const snapshot =
-await db.collection("users")
-.where("slug","==",slug)
-.get();
-
-
-
-if(snapshot.empty){
-
-document.getElementById("name").innerHTML=
-"Portfolio Not Found";
-
-return;
-
-}
-
-
-
-userData=snapshot.docs[0].data();
-
-
-
-document.getElementById("name").innerHTML =
-userData.name;
-
-
-
-document.getElementById("bio").innerHTML =
-userData.bio;
-
-
-
-document.getElementById("skills").innerHTML =
-userData.skills;
-
-
-
-document.getElementById("education").innerHTML =
-
-`
-${userData.college || ""}
-<br>
-${userData.degree || ""}
-<br>
-${userData.branch || ""}
-`;
-
-}
-
-
-
-loadPortfolio();
-
-
-
-
-
-
-async function sendMessage(){
-
-
-let input =
-document.getElementById("userInput");
-
-
-let text=input.value.trim();
-
-
-if(!text)return;
-
-
-
-let box =
-document.getElementById("chatBox");
-
-
-
-box.innerHTML +=
-`
-<div class="text-right">
-<span class="bg-purple-600 p-2 rounded-lg">
-${text}
-</span>
-</div>
-`;
-
-
-
-input.value="";
-
-
-
-const response =
-await fetch(
-"https://portfolio-backend-x599.onrender.com/chat",
-{
-
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-
-body:JSON.stringify({
-
-message:text,
-
-slug:slug
-
-})
-
-
-});
-
-
-
-const data =
-await response.json();
-
-
-
-box.innerHTML +=
-
-`
-<div>
-<span class="bg-black border border-purple-700 p-2 rounded-lg">
-${data.reply}
-</span>
-</div>
-`;
-
-
-}
-
-</script>
+<script src="portfolio.js"></script>
 
 
 </body>
