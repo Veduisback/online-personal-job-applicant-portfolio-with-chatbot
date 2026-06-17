@@ -188,22 +188,25 @@ async function generatePortfolio() {
         }
 
         const slug = fullName
-            .trim()
-            .toLowerCase()
-            .replace(/[^a-z0-9 ]/g, "")
-            .replace(/\s+/g, "-");
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, "-");
 
-        await db
-            .collection("users")
-            .doc(currentUserEmail)
-            .set({
+const portfolioURL =
+`${window.location.origin}${window.location.pathname.replace("dashboard.html","")}portfolio.html?slug=${slug}`;
 
-                slug: slug,
-                portfolioGenerated: true,
-                portfolioCreatedAt:
-                    new Date().toISOString()
+await db
+    .collection("users")
+    .doc(currentUserEmail)
+    .set({
 
-            }, { merge: true });
+        slug: slug,
+        portfolioUrl: portfolioURL,
+        portfolioGenerated: true,
+        portfolioCreatedAt: new Date().toISOString()
+
+    }, { merge: true });
 
         const portfolioURL =
             `${window.location.origin}${window.location.pathname.replace("dashboard.html", "")}portfolio.html?slug=${slug}`;
